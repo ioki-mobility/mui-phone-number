@@ -2,9 +2,7 @@
 
 Highly customizable phone input component with auto formatting.
 
-It looks like this, but in Material Design:
-
-![alt tag](https://media.giphy.com/media/l378A8qFNzgiuPUre/giphy.gif)
+![mui-phone-number demo](doc/demo.gif)
 
 Uses `@material-ui/core/TextField` for rendering the phone input
 
@@ -223,11 +221,11 @@ yarn dev
 
 ## License
 
-MIT License.
+[MIT](https://opensource.org/licenses/MIT)
 
 Based on:
 
 - [material-ui-phone-number-2](https://github.com/justdvl/material-ui-phone-number-2)
 - [material-ui-phone-number](https://github.com/alexplumb/material-ui-phone-number)
 - [react-phone-input-2](https://github.com/bl00mber/react-phone-input-2)
-- [react-phone-input](https://github.com/razagill/react-phone-input) using [MIT](https://opensource.org/licenses/MIT)
+- [react-phone-input](https://github.com/razagill/react-phone-input)
