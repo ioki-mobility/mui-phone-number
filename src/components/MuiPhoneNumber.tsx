@@ -2,9 +2,10 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Flags from 'country-flag-icons/react/3x2'
 import { styled, TextField, InputAdornment } from '@mui/material'
-import { some, find, reduce, filter, includes, head, tail, memoize, trim, startsWith, isString } from 'lodash'
+import { some, find, reduce, filter, head, tail, startsWith, isString } from 'lodash'
 import { allCountries } from '../country_data'
 import VirtualCountryMenu from './VirtualCountryMenu'
+import {guessSelectedCountry, stripCountryDialCode, filterRegions} from '../support/countries'
 
 const TextFieldStyled = styled(TextField)(({ theme }) => ({
   '& input': {
@@ -12,44 +13,6 @@ const TextFieldStyled = styled(TextField)(({ theme }) => ({
     paddingLeft: 8,
   },
 }))
-
-const guessSelectedCountry = memoize((inputNumber, onlyCountries, defaultCountry) => {
-  const secondBestGuess = find(onlyCountries, { iso2: defaultCountry }) || {}
-  if (trim(inputNumber) === '') return secondBestGuess
-
-  const bestGuess = reduce(
-    onlyCountries,
-    (selectedCountry, country) => {
-      if (startsWith(inputNumber, country.dialCode)) {
-        if (country.dialCode.length > selectedCountry.dialCode.length) {
-          return country
-        }
-        if (
-          country.dialCode.length === selectedCountry.dialCode.length &&
-          country.priority < selectedCountry.priority
-        ) {
-          return country
-        }
-      }
-      return selectedCountry
-    },
-    { dialCode: '', priority: 10001 },
-    this,
-  )
-
-  if (!bestGuess.name) return secondBestGuess
-  return bestGuess
-})
-
-const stripCountryDialCode = (countryDialCode, number) => {
-  const dialCodeRegex = new RegExp(`^\\+?${countryDialCode}`)
-
-  if (number.match(dialCodeRegex)) {
-    return number.replace(dialCodeRegex, '')
-  }
-
-  return number
-}
 
 class MuiPhoneNumber extends React.Component {
   flags = {}
@@ -59,7 +22,7 @@ class MuiPhoneNumber extends React.Component {
 
     let filteredCountries = allCountries
 
-    if (props.regions) filteredCountries = this.filterRegions(props.regions, filteredCountries)
+    if (props.regions) filteredCountries = filterRegions(props.regions, filteredCountries)
 
     const onlyCountries = this.getOnlyCountries(props.onlyCountries, filteredCountries)
 
@@ -122,18 +85,6 @@ class MuiPhoneNumber extends React.Component {
     if (onlyCountriesArray.length === 0) return filteredCountries
 
     return filteredCountries.filter((country) => onlyCountriesArray.some((element) => element === country.iso2))
-  }
-
-  filterRegions = (regions, filteredCountries) => {
-    if (typeof regions === 'string') {
-      const region = regions
-      return filteredCountries.filter((country) => country.regions.some((element) => element === region))
-    }
-
-    return filteredCountries.filter((country) => {
-      const matches = regions.map((region) => country.regions.some((element) => element === region))
-      return matches.some((el) => el)
-    })
   }
 
   // Hooks for updated props
