@@ -6,10 +6,10 @@ export const guessSelectedCountry = memoize(
     inputNumber: string,
     onlyCountries: Country[],
     defaultCountryIso2: string
-  ) => {
+  ): Country | null => {
     const defaultCountry =
-      onlyCountries.find((country) => country.iso2 === defaultCountryIso2) ||
-      {};
+      onlyCountries.find((country) => country.iso2 === defaultCountryIso2) ??
+      null;
 
     if (trim(inputNumber) === "") return defaultCountry;
 
@@ -43,6 +43,7 @@ export const guessSelectedCountry = memoize(
     );
 
     if (!bestGuess.name) return defaultCountry;
+
     return bestGuess;
   }
 );

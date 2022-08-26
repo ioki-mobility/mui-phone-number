@@ -687,4 +687,4 @@ const allCountriesTemp = rawAllCountries.map((country) => {
 });
 
 export const allCountryCodes = allCountryCodesTemp;
-export const allCountries: Country[][] = allCountriesTemp;
+export const allCountries: Country[] = allCountriesTemp.flat();

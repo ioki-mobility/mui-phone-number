@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Flags from "country-flag-icons/react/3x2";
 import { styled, TextField, InputAdornment } from "@mui/material";
-import { some, find, filter, startsWith, isString } from "lodash";
-import { allCountries } from "../countryData";
+import { find, filter, isString } from "lodash";
+import { allCountries, Country, CountryIso2 } from "../countryData";
 import VirtualCountryMenu from "./VirtualCountryMenu";
 import {
   guessSelectedCountry,
@@ -12,6 +12,13 @@ import {
 } from "../support/countries";
 import { formatNumber, numberWithCountry } from "../support/phoneNumber";
 import { TextFieldProps } from "@mui/material";
+
+type NumberChangeEvent = React.ChangeEvent<
+  HTMLInputElement | HTMLTextAreaElement
+>;
+type CountryCallbackData =
+  | {}
+  | { name: string; dialCode: string; countryCode: string };
 
 export type MuiPhoneNumberProps = TextFieldProps & {
   autoFormat?: boolean;
@@ -26,13 +33,30 @@ export type MuiPhoneNumberProps = TextFieldProps & {
   excludeCountries?: string[];
   inputClass?: string;
   onChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | string
+    e: NumberChangeEvent | string,
+    countryData: CountryCallbackData
   ) => void;
   onlyCountries?: string[];
   preferredCountries?: string[];
   regions?: [string] | string;
   masks?: { [countryIso2: string]: string };
   isValid: (phoneNumber: string) => boolean;
+  localization: { [iso2: CountryIso2]: string };
+  onEnterKeyPress: () => void;
+  keys: object;
+  value: string;
+  onClick: (
+    e: React.MouseEvent<HTMLInputElement>,
+    countryData: CountryCallbackData
+  ) => {};
+  onFocus: (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
+    countryData: CountryCallbackData
+  ) => {};
+  onBlur: (
+    e: React.FocusEvent<HTMLInputElement>,
+    countryData: CountryCallbackData
+  ) => {};
 };
 
 const TextFieldStyled = styled(TextField)(() => ({
@@ -46,7 +70,7 @@ const MuiPhoneNumber = ({
   value,
   onlyCountries: onlyCountriesFilter = [],
   preferredCountries: preferredCountriesFilter = [],
-  defaultCountry = "",
+  defaultCountry: defaultCountryIso2 = "",
   masks = {},
 
   placeholder: defaultPlaceholder = "+1 (702) 123-4567",
@@ -61,8 +85,8 @@ const MuiPhoneNumber = ({
   isValid = (phoneNumber: string) =>
     allCountries.some(
       (country) =>
-        startsWith(phoneNumber.replace(/\D/g, ""), country.dialCode) ||
-        startsWith(country.dialCode, phoneNumber)
+        phoneNumber.replace(/\D/g, "").startsWith(country.dialCode) ||
+        country.dialCode.startsWith(phoneNumber)
     ),
   disableDropdown = false,
   enableLongNumbers = false,
@@ -95,14 +119,15 @@ const MuiPhoneNumber = ({
 }: MuiPhoneNumberProps) => {
   const [formattedNumberWithoutCountry, setFormattedNumberWithoutCountry] =
     useState("");
-  const [selectedCountry, setSelectedCountry] = useState(defaultCountry);
-  const [onlyCountries, setOnlyCountries] = useState([]);
-  const [preferredCountries, setPreferredCountries] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
+  const [onlyCountries, setOnlyCountries] = useState<Country[]>([]);
+  const [preferredCountries, setPreferredCountries] = useState<Country[]>([]);
   const [loading, setLoading] = useState(true);
   const [inputRef, setInputRef] = useState(null);
   const [placeholder, setPlaceholder] = useState(defaultPlaceholder);
+  const [defaultCountry, setDefaultCountry] = useState<Country | null>(null);
 
-  const getInputMask = (country) => {
+  const getInputMask = (country: Country) => {
     const mask = masks[country.iso2];
 
     if (mask) return mask;
@@ -110,7 +135,7 @@ const MuiPhoneNumber = ({
     return country.format;
   };
 
-  const updateFormattedNumber = (phoneNumber) => {
+  const updateFormattedNumber = (phoneNumber: string) => {
     if (!phoneNumber) return;
 
     const unformattedNumber = phoneNumber.replace(/\D/g, "");
@@ -118,8 +143,11 @@ const MuiPhoneNumber = ({
       guessSelectedCountry(
         unformattedNumber.substring(0, 6),
         onlyCountries,
-        defaultCountry
+        defaultCountryIso2
       ) || defaultCountry;
+
+    if (!country) return;
+
     const strippedNumber = stripCountryDialCode(
       country.dialCode,
       unformattedNumber
@@ -146,42 +174,37 @@ const MuiPhoneNumber = ({
     };
   };
 
-  const handleInput = (e) => {
-    let newSelectedCountry = selectedCountry;
+  const handleInput = (e: NumberChangeEvent) => {
     const oldFormattedText = formattedNumberWithoutCountry;
+    const inputValue = e.currentTarget.value;
 
     // if the input is the same as before, must be some special key like enter etc.
-    if (e.target.value === oldFormattedText) {
+    if (inputValue === oldFormattedText) {
       return;
     }
 
     let formattedNumber = "";
+    const trimmedNumber = inputValue.replace(/\D/g, "");
 
     // Does not exceed 15 digit phone number limit
-    if (e.target.value.replace(/\D/g, "").length > 15) {
+    if (trimmedNumber.length > 15) {
       return;
     }
 
-    if (e.target.value.length > 0) {
-      // before entering the number in new format, lets check if the dial code now matches some other country
-      const inputNumber = e.target.value.replace(/\D/g, "");
-
-      // let us remove all non numerals from the input
+    if (inputValue.length > 0 && selectedCountry) {
       formattedNumber = formatNumber(
-        inputNumber,
-        getInputMask(newSelectedCountry),
+        trimmedNumber,
+        getInputMask(selectedCountry),
         enableLongNumbers,
         autoFormat
       );
     }
 
     setFormattedNumberWithoutCountry(formattedNumber);
-    setSelectedCountry(
-      newSelectedCountry.dialCode ? newSelectedCountry : selectedCountry
-    );
+
     if (onChange) {
       onChange(
-        numberWithCountry(newSelectedCountry, formattedNumber),
+        numberWithCountry(selectedCountry, formattedNumber),
         getCountryData()
       );
     }
@@ -224,6 +247,19 @@ const MuiPhoneNumber = ({
         (preferredCountry) => preferredCountry === country.iso2
       )
     );
+    setPreferredCountries(preferredCountries);
+
+    const defaultCountry = onlyCountries.find(
+      (country) => country.iso2 === defaultCountryIso2
+    );
+    if (!defaultCountry) {
+      console.error(
+        "[MuiPhoneNumber] Default country could not be found in `onlyCountries`, aborting."
+      );
+      return;
+    }
+
+    setDefaultCountry(defaultCountry);
 
     let inputNumber = value || "";
     const unformattedNumber = inputNumber.replace(/\D/g, "");
@@ -234,11 +270,11 @@ const MuiPhoneNumber = ({
       countryGuess = guessSelectedCountry(
         unformattedNumber.substring(0, 6),
         onlyCountries,
-        defaultCountry
+        defaultCountryIso2
       );
     } else if (defaultCountry) {
       // Default country
-      countryGuess = find(onlyCountries, { iso2: defaultCountry });
+      countryGuess = find(onlyCountries, { iso2: defaultCountryIso2 });
     } else {
       // Empty params
       countryGuess = null;
@@ -258,10 +294,11 @@ const MuiPhoneNumber = ({
           autoFormat
         );
       }
+
+      setSelectedCountry(selectedCountry);
     }
 
     setFormattedNumberWithoutCountry(inputNumber);
-    setSelectedCountry(selectedCountry);
     setLoading(false);
   }, []);
 
@@ -269,16 +306,18 @@ const MuiPhoneNumber = ({
     updateFormattedNumber(value);
   }, [updateFormattedNumber, value, selectedCountry]);
 
-  const handleInputClick = (e) => {
+  const handleInputClick = (e: React.MouseEvent<HTMLInputElement>) => {
     if (onClick) {
       onClick(e, getCountryData());
     }
   };
 
-  const handleFlagItemClick = (country) => {
+  const handleFlagItemClick = (country: string | Country) => {
     const nextSelectedCountry = isString(country)
       ? find(onlyCountries, (countryItem) => countryItem.iso2 === country)
       : find(onlyCountries, country);
+
+    if (!nextSelectedCountry) return;
 
     const unformattedNumber = formattedNumberWithoutCountry
       .replace(" ", "")
@@ -295,6 +334,7 @@ const MuiPhoneNumber = ({
 
     setSelectedCountry(nextSelectedCountry);
     setFormattedNumberWithoutCountry(newFormattedNumber);
+
     if (onChange) {
       onChange(
         numberWithCountry(nextSelectedCountry, newFormattedNumber),
@@ -303,7 +343,9 @@ const MuiPhoneNumber = ({
     }
   };
 
-  const handleInputFocus = (e) => {
+  const handleInputFocus = (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setPlaceholder("");
 
     if (onFocus) {
@@ -311,8 +353,8 @@ const MuiPhoneNumber = ({
     }
   };
 
-  const handleInputBlur = (e) => {
-    if (!e.target.value) {
+  const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    if (!e.currentTarget.value) {
       setPlaceholder(defaultPlaceholder);
     }
 
@@ -331,6 +373,7 @@ const MuiPhoneNumber = ({
       return localizedA.localeCompare(localizedB);
     });
 
+    //@ts-ignore
     const FlagComponent = Flags[selectedCountry.iso2.toUpperCase()];
 
     return {
@@ -341,7 +384,9 @@ const MuiPhoneNumber = ({
             selectedCountry={selectedCountry}
             countries={preferredCountries.concat(onlyCountries)}
             localization={localization}
-            onCountrySelected={(country) => handleFlagItemClick(country)}
+            onCountrySelected={(country: Country) =>
+              handleFlagItemClick(country)
+            }
           />
         </InputAdornment>
       ),
