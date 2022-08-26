@@ -367,6 +367,8 @@ const MuiPhoneNumber = ({
     isValid(numberWithCountry(selectedCountry, formattedNumberWithoutCountry));
 
   const getDropdownProps = () => {
+    if (!selectedCountry) return null;
+
     onlyCountries.sort((a, b) => {
       const localizedA = localization[a.name] || a.name;
       const localizedB = localization[b.name] || b.name;
