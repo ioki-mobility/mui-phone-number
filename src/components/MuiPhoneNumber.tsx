@@ -246,13 +246,11 @@ const MuiPhoneNumber = ({
     );
     setPreferredCountries(preferredCountries);
 
-    const defaultCountry = onlyCountries.find(
-      (country) => country.iso2 === defaultCountryIso2
-    );
+    const defaultCountry =
+      onlyCountries.find((country) => country.iso2 === defaultCountryIso2) ??
+      onlyCountries[0];
     if (!defaultCountry) {
-      console.error(
-        "[MuiPhoneNumber] Default country could not be found in `onlyCountries`, aborting."
-      );
+      console.error("[MuiPhoneNumber] No countries found, aborting.");
       return;
     }
 
@@ -277,7 +275,7 @@ const MuiPhoneNumber = ({
       countryGuess = null;
     }
 
-    const selectedCountry = countryGuess;
+    const selectedCountry = countryGuess ?? defaultCountry;
 
     if (selectedCountry) {
       inputNumber = stripCountryDialCode(selectedCountry.dialCode, inputNumber);
