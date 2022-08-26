@@ -1,9 +1,24 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import MuiPhoneNumber from "./components/MuiPhoneNumber";
+import "./demo.css";
+
+const Demo = ({ description, code, children }) => {
+  return (
+    <div>
+      <p>{description}</p>
+      <SyntaxHighlighter language="javascript" style={docco} wrapLongLines>
+        {code}
+      </SyntaxHighlighter>
+      {children}
+    </div>
+  );
+};
 
 const ChangeDemo = () => {
-  const [number, setNumber] = useState();
+  const [number, setNumber] = useState("");
 
   return (
     <div>
@@ -12,8 +27,8 @@ const ChangeDemo = () => {
       <MuiPhoneNumber
         defaultCountry="it"
         preferredCountries={["it", "se"]}
-        onChange={(e) => {
-          setNumber(e);
+        onChange={(phoneNumber) => {
+          setNumber(phoneNumber);
         }}
       />
     </div>
@@ -22,61 +37,103 @@ const ChangeDemo = () => {
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <div style={{ fontFamily: "'Roboto', sans-serif", fontSize: "15px" }}>
-      <div style={{ display: "inline-block", verticalAlign: "top" }}>
-        <p>v1.1.0</p>
-        <p>Exclude countries (usa, canada)</p>
-        <MuiPhoneNumber defaultCountry="no" excludeCountries={["us", "ca"]} />
-        <p>Only countries</p>
-        <MuiPhoneNumber defaultCountry="gb" onlyCountries={["gb", "es"]} />
-        <p>Preferred countries</p>
-        <MuiPhoneNumber defaultCountry="it" preferredCountries={["it", "se"]} />
-        <p>onChange</p>
-        <ChangeDemo />
-      </div>
+    <h1>mui-phone-number</h1>
+    <Demo description="Basic demo" code={`<MuiPhoneNumber />`}>
+      <MuiPhoneNumber />
+    </Demo>
 
-      <div style={{ display: "inline-block", marginLeft: "40px" }}>
-        <p>v2</p>
-        <p>Auto country detect by value</p>
-        <MuiPhoneNumber value="+3802343252" />
-        <p>Disabled area codes with disableAreaCodes</p>
-        <MuiPhoneNumber defaultCountry="us" disableAreaCodes />
-        <p>Disabled flag by default</p>
-        <p>Customizable placeholder</p>
-      </div>
-
-      <div
-        style={{
-          display: "inline-block",
-          marginLeft: "40px",
-          verticalAlign: "top",
-          marginTop: "35px",
-        }}
+    <h2>Pass in phone number and listen for change</h2>
+    <div className="grid">
+      <Demo
+        description="Automatically detect country by provided phone number"
+        code={`<MuiPhoneNumber value="+3802343252" />`}
       >
-        <p>Custom region selected: {"{'europe'}"}</p>
+        <MuiPhoneNumber value="+3802343252" />
+      </Demo>
+
+      <Demo
+        description="onChange callback"
+        code={`<MuiPhoneNumber
+  defaultCountry="it"
+  preferredCountries={["it", "se"]}
+  onChange={(phoneNumber) => {
+    console.log(phoneNumber);
+  }}
+/>`}
+      >
+        <ChangeDemo />
+      </Demo>
+    </div>
+
+    <h2>Configure available countries</h2>
+    <div className="grid">
+      <Demo
+        description="Exclude countries and set a default country"
+        code={`<MuiPhoneNumber defaultCountry="no" excludeCountries={["us", "ca"]} />`}
+      >
+        <MuiPhoneNumber defaultCountry="no" excludeCountries={["us", "ca"]} />
+      </Demo>
+
+      <Demo
+        description="Only show configured countries"
+        code={`<MuiPhoneNumber defaultCountry="gb" onlyCountries={["gb", "es"]} />`}
+      >
+        <MuiPhoneNumber defaultCountry="gb" onlyCountries={["gb", "es"]} />
+      </Demo>
+
+      <Demo
+        description="Show preferred countries at top of list"
+        code={`<MuiPhoneNumber defaultCountry="it" preferredCountries={["it", "se"]} />`}
+      >
+        <MuiPhoneNumber defaultCountry="it" preferredCountries={["it", "se"]} />
+      </Demo>
+
+      <Demo
+        description="Filter countries by region: europe"
+        code={`<MuiPhoneNumber defaultCountry="it" regions="europe" />`}
+      >
         <MuiPhoneNumber defaultCountry="it" regions="europe" />
-        <p>Custom regions selected: {"{['north-america', 'carribean']}"}</p>
+      </Demo>
+
+      <Demo
+        description="Filter countries by region: north-america and carribean"
+        code={`<MuiPhoneNumber
+  defaultCountry="ca"
+  regions={["north-america", "carribean"]}
+/>`}
+      >
         <MuiPhoneNumber
           defaultCountry="ca"
           regions={["north-america", "carribean"]}
         />
-        <p>Disabled dropdown</p>
+      </Demo>
+    </div>
+
+    <h2>Configure appearance</h2>
+    <div className="grid">
+      <Demo
+        description="Customisable placeholder"
+        code={`<MuiPhoneNumber placeholder="987 654 321" />`}
+      >
+        <MuiPhoneNumber placeholder="987 654 321" />
+      </Demo>
+
+      <Demo
+        description="Disabled dropdown"
+        code={`<MuiPhoneNumber
+  onlyCountries={["us"]}
+  defaultCountry="us"
+  disableDropdown
+  placeholder="(702) 123-4567"
+/>`}
+      >
         <MuiPhoneNumber
           onlyCountries={["us"]}
           defaultCountry="us"
           disableDropdown
           placeholder="(702) 123-4567"
         />
-        <p>Disabled dropdown and country code</p>
-        <MuiPhoneNumber
-          onlyCountries={["us"]}
-          defaultCountry="us"
-          disableAreaCodes
-          disableCountryCode
-          disableDropdown
-          placeholder="(702) 123-4567"
-        />
-      </div>
+      </Demo>
     </div>
   </React.StrictMode>
 );

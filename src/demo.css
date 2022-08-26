@@ -1,0 +1,19 @@
+body {
+  font-family: 'Roboto', sans-serif;
+  font-size: 15px;
+}
+
+h2 {
+  margin-top: 3rem;
+}
+
+.grid {
+  display: grid;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}

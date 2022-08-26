@@ -32,10 +32,7 @@ export type MuiPhoneNumberProps = TextFieldProps & {
   enableLongNumbers?: boolean;
   excludeCountries?: string[];
   inputClass?: string;
-  onChange: (
-    e: NumberChangeEvent | string,
-    countryData: CountryCallbackData
-  ) => void;
+  onChange: (phoneNumber: string, countryData: CountryCallbackData) => void;
   onlyCountries?: string[];
   preferredCountries?: string[];
   regions?: [string] | string;
@@ -73,7 +70,7 @@ const MuiPhoneNumber = ({
   defaultCountry: defaultCountryIso2 = "",
   masks = {},
 
-  placeholder: defaultPlaceholder = "+1 (702) 123-4567",
+  placeholder: defaultPlaceholder = "(702) 123-4567",
   disabled = false,
   error = false,
   variant = "standard",
@@ -225,7 +222,7 @@ const MuiPhoneNumber = ({
       if (typeof refProp === "function") {
         refProp(ref);
       } else {
-        refProp.current = ref;
+        setInputRef(ref);
       }
     }
   };
@@ -393,7 +390,7 @@ const MuiPhoneNumber = ({
     };
   };
 
-  if (loading) return;
+  if (loading) return null;
 
   const dropdownProps = getDropdownProps();
 
