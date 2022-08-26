@@ -67,6 +67,7 @@ const MuiPhoneNumber = ({
   value,
   onlyCountries: onlyCountriesFilter = [],
   preferredCountries: preferredCountriesFilter = [],
+  excludeCountries = [],
   defaultCountry: defaultCountryIso2 = "",
   masks = {},
 
@@ -231,6 +232,10 @@ const MuiPhoneNumber = ({
     let filteredCountries = allCountries;
 
     if (regions) filteredCountries = filterRegions(regions, filteredCountries);
+    if (excludeCountries)
+      filteredCountries = filteredCountries.filter(
+        (country) => !excludeCountries.includes(country.iso2)
+      );
 
     const onlyCountries = getOnlyCountries(
       onlyCountriesFilter,
