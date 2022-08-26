@@ -25,10 +25,7 @@ export type MuiPhoneNumberProps = TextFieldProps & {
   classes?: any;
   countryCodeEditable?: boolean;
   defaultCountry?: string;
-  disableAreaCodes?: boolean;
-  disableCountryCode?: boolean;
   disableDropdown?: boolean;
-  dropdownClass?: string;
   enableLongNumbers?: boolean;
   excludeCountries?: string[];
   inputClass?: string;
@@ -77,7 +74,6 @@ const MuiPhoneNumber = ({
   variant = "standard",
 
   inputClass = "",
-  dropdownClass = "",
 
   autoFormat = true,
   isValid = (phoneNumber: string) =>
@@ -397,7 +393,7 @@ const MuiPhoneNumber = ({
 
   if (loading) return null;
 
-  const dropdownProps = getDropdownProps();
+  const dropdownProps = disableDropdown ? {} : getDropdownProps();
 
   return (
     <>

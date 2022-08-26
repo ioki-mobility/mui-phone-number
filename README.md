@@ -1,10 +1,10 @@
 # mui-phone-number
 
-Highly customizable phone input component with auto formatting.
+A React phone input component with auto formatting for [Material UI](https://mui.com).
 
 ![mui-phone-number demo](doc/demo.gif)
 
-Uses `@material-ui/core/TextField` for rendering the phone input
+Uses `@mui/material/TextField` for rendering the phone input.
 
 ## Installation
 
@@ -21,17 +21,15 @@ yarn add mui-phone-number
 ```jsx
 import MuiPhoneNumber from 'mui-phone-number'
 
-<MuiPhoneNumber defaultCountry={'us'} onChange={handleOnChange} />
+<MuiPhoneNumber defaultCountry="us" onChange={onPhoneNumberChanged} />
 ```
 
-Your handler for the `onChange` event should expect a string as
-parameter, where the value is that of the entered phone number. For example:
+The handler for the `onChange` event receives the entered phone number as a string (including the country dial code).
 
-```jsx
-function handleOnChange(value) {
-  this.setState({
-    phone: value,
-  })
+```js
+const onPhoneNumberChanged = (phoneNumber, country) => {
+  console.log(phoneNumber) // +4176 123 45 67
+  console.log(country) // { name: "Switzerland", dialCode: "41", countryCode: "ch" }
 }
 ```
 
@@ -43,62 +41,56 @@ function handleOnChange(value) {
     <th> Type </th>
     <th> Description </th>
     <th> Example </th>
+    <th> Default </th>
   </tr>
   <tr>
     <td> excludeCountries </td>
     <td> array </td>
-    <td> array of country codes to be excluded </td>
+    <td> country codes to be excluded </td>
     <td> ['cu','cw','kz'] </td>
+    <td></td>
   </tr>
   <tr>
     <td> onlyCountries </td>
     <td> array </td>
     <td> country codes to be included </td>
     <td> ['cu','cw','kz'] </td>
+    <td></td>
   </tr>
   <tr>
     <td> preferredCountries </td>
     <td> array </td>
     <td> country codes to be at the top </td>
     <td> ['cu','cw','kz'] </td>
+    <td></td>
   </tr>
   <tr>
     <td> defaultCountry </td>
     <td> string </td>
     <td> initial country </td>
     <td> 'us' </td>
+    <td></td>
   </tr>
 
   <tr>
     <td> inputClass </td>
     <td> string </td>
-    <td colspan="2"> class for input </td>
-  </tr>
-  <tr>
-    <td> dropdownClass </td>
-    <td> string </td>
-    <td colspan="2"> class for dropdown container </td>
+    <td> class for input </td>
+    <td></td>
   </tr>
 
   <tr>
     <td> autoFormat </td>
     <td> bool </td>
-    <td colspan="2"> on/off auto formatting, true by default </td>
-  </tr>
-  <tr>
-    <td> disableAreaCodes </td>
-    <td> bool </td>
-    <td colspan="2"> disable local codes for all countries </td>
-  </tr>
-  <tr>
-    <td> disableCountryCode </td>
-    <td> bool </td>
-    <td colspan="2"> false by default </td>
+    <td> add whitespace, brackets and dashes if `true` </td>
+    <td></td>
+    <td>true</td>
   </tr>
   <tr>
     <td> disableDropdown </td>
     <td> bool </td>
-    <td colspan="2"> false by default </td>
+    <td></td>
+    <td> false </td>
   </tr>
   <tr>
     <td> enableLongNumbers </td>

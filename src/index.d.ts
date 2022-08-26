@@ -13,13 +13,10 @@
 //  variant: PropTypes.string,
 //
 //  inputClass: PropTypes.string,
-//  dropdownClass: PropTypes.string,
 //  InputProps: PropTypes.object,
 //  inputProps: PropTypes.object,
 //  inputRef: PropTypes.func,
 //
-//  autoFormat: PropTypes.bool,
-//  disableDropdown: PropTypes.bool,
 //  enableLongNumbers: PropTypes.bool,
 //  countryCodeEditable: PropTypes.bool,
 //
