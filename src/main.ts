@@ -1,3 +1,3 @@
-import MuiPhoneNumber from './components'
+import MuiPhoneNumber from './components/MuiPhoneNumber'
 
 export default MuiPhoneNumber

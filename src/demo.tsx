@@ -1,7 +1,6 @@
 import React, {useState} from 'react'
 import ReactDOM from 'react-dom/client'
-import MuiPhoneNumber from './components'
-import './index.css'
+import MuiPhoneNumber from './components/MuiPhoneNumber'
 
 const ChangeDemo = () => {
   const [number, setNumber] = useState()
@@ -14,7 +13,7 @@ const ChangeDemo = () => {
         defaultCountry="it"
         preferredCountries={['it', 'se']}
         onChange={(e) => {
-          this.setState({ number: e })
+          setNumber(e)
         }}
       />
     </div>
