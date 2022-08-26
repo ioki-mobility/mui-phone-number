@@ -77,38 +77,37 @@ const onPhoneNumberChanged = (phoneNumber, country) => {
     <td> string </td>
     <td> class for input </td>
     <td></td>
+    <td></td>
   </tr>
 
   <tr>
     <td> autoFormat </td>
     <td> bool </td>
-    <td> add whitespace, brackets and dashes if `true` </td>
+    <td> add whitespace, brackets and dashes if true </td>
     <td></td>
-    <td>true</td>
+    <td> true </td>
   </tr>
   <tr>
     <td> disableDropdown </td>
     <td> bool </td>
+    <td> hide the country selection </td>
     <td></td>
     <td> false </td>
   </tr>
   <tr>
     <td> enableLongNumbers </td>
     <td> bool </td>
-    <td colspan="2"> false by default </td>
-  </tr>
-  <tr>
-    <td> countryCodeEditable </td>
-    <td> bool </td>
-    <td colspan="2"> true by default </td>
+    <td></td>
+    <td></td>
+    <td> false </td>
   </tr>
 
   <tr>
-    <td colspan="4"><b>Supported TextField props</b></td>
+    <td colspan="5"><b>Supported TextField props</b></td>
   </tr>
 
   <tr>
-    <td colspan="4">See TextField API for possible values https://material-ui.com/api/text-field/</td>
+    <td colspan="5">See TextField API for possible values https://material-ui.com/api/text-field/</td>
   </tr>
 </table>
 
@@ -142,13 +141,13 @@ const onPhoneNumberChanged = (phoneNumber, country) => {
   </tr>
 </table>
 
-Regions selected: {'europe'}
+Single region (without array notation): `'europe'`
 
 ```jsx
-<MuiPhoneNumber defaultCountry="it" regions={'europe'} />
+<MuiPhoneNumber defaultCountry="it" regions="europe" />
 ```
 
-Regions selected: {['north-america', 'carribean']}
+Multiple regions: `['north-america', 'carribean']`
 
 ```jsx
 <MuiPhoneNumber defaultCountry="ca" regions={['north-america', 'carribean']} />
@@ -179,11 +178,8 @@ Regions selected: {['north-america', 'carribean']}
     <td> onFocus </td>
     <td> onBlur </td>
     <td> onClick </td>
-    <td> onKeyDown </td>
   </tr>
 </table>
-
-Country data object is not returned from onKeyDown event.
 
 <table>
   <tr>

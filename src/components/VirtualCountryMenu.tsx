@@ -164,7 +164,7 @@ type Props = {
   FlagComponent: JSX.Element;
   selectedCountry: Country;
   countries: Country[];
-  localization: { [iso2: CountryIso2]: string };
+  localization: { [englishName: string]: string };
   onCountrySelected: (country: Country) => void;
 };
 

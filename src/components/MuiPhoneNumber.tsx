@@ -23,7 +23,6 @@ type CountryCallbackData =
 export type MuiPhoneNumberProps = TextFieldProps & {
   autoFormat?: boolean;
   classes?: any;
-  countryCodeEditable?: boolean;
   defaultCountry?: string;
   disableDropdown?: boolean;
   enableLongNumbers?: boolean;
@@ -35,7 +34,7 @@ export type MuiPhoneNumberProps = TextFieldProps & {
   regions?: [string] | string;
   masks?: { [countryIso2: string]: string };
   isValid: (phoneNumber: string) => boolean;
-  localization: { [iso2: CountryIso2]: string };
+  localization: { [englishName: string]: string };
   onEnterKeyPress: () => void;
   keys: object;
   value: string;
@@ -84,7 +83,6 @@ const MuiPhoneNumber = ({
     ),
   disableDropdown = false,
   enableLongNumbers = false,
-  countryCodeEditable = true,
 
   regions = "",
 

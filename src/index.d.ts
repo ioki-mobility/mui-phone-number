@@ -17,12 +17,9 @@
 //  inputProps: PropTypes.object,
 //  inputRef: PropTypes.func,
 //
-//  enableLongNumbers: PropTypes.bool,
-//  countryCodeEditable: PropTypes.bool,
 //
 //  regions: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
 //
-//  localization: PropTypes.object,
 //
 //  onChange: PropTypes.func,
 //  onFocus: PropTypes.func,
