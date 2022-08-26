@@ -1,17 +1,26 @@
-import { find, reduce, memoize, trim, startsWith } from "lodash";
+import { reduce, memoize, trim } from "lodash";
+import { Country, CountryIso2, Region } from "../countryData";
 
 export const guessSelectedCountry = memoize(
-  (inputNumber, onlyCountries, defaultCountry) => {
-    const secondBestGuess = find(onlyCountries, { iso2: defaultCountry }) || {};
-    if (trim(inputNumber) === "") return secondBestGuess;
+  (
+    inputNumber: string,
+    onlyCountries: Country[],
+    defaultCountryIso2: string
+  ) => {
+    const defaultCountry =
+      onlyCountries.find((country) => country.iso2 === defaultCountryIso2) ||
+      {};
+
+    if (trim(inputNumber) === "") return defaultCountry;
 
     const bestGuess = reduce(
       onlyCountries,
       (selectedCountry, country) => {
-        if (startsWith(inputNumber, country.dialCode)) {
+        if (inputNumber.startsWith(country.dialCode)) {
           if (country.dialCode.length > selectedCountry.dialCode.length) {
             return country;
           }
+
           if (
             country.dialCode.length === selectedCountry.dialCode.length &&
             country.priority < selectedCountry.priority
@@ -19,28 +28,42 @@ export const guessSelectedCountry = memoize(
             return country;
           }
         }
+
         return selectedCountry;
       },
-      { dialCode: "", priority: 10001 },
-      this
+      {
+        name: "",
+        regions: [],
+        iso2: "",
+        dialCode: "",
+        priority: 10001,
+        hasAreaCodes: false,
+        isAreaCode: false,
+      } as Country
     );
 
-    if (!bestGuess.name) return secondBestGuess;
+    if (!bestGuess.name) return defaultCountry;
     return bestGuess;
   }
 );
 
-export const stripCountryDialCode = (countryDialCode, number) => {
+export const stripCountryDialCode = (
+  countryDialCode: string,
+  phoneNumber: string
+) => {
   const dialCodeRegex = new RegExp(`^\\+?${countryDialCode}`);
 
-  if (number.match(dialCodeRegex)) {
-    return number.replace(dialCodeRegex, "");
+  if (phoneNumber.match(dialCodeRegex)) {
+    return phoneNumber.replace(dialCodeRegex, "");
   }
 
-  return number;
+  return phoneNumber;
 };
 
-export const filterRegions = (regions, filteredCountries) => {
+export const filterRegions = (
+  regions: string | Region[],
+  filteredCountries: Country[]
+) => {
   if (typeof regions === "string") {
     const region = regions;
 
@@ -49,19 +72,18 @@ export const filterRegions = (regions, filteredCountries) => {
     );
   }
 
-  return filteredCountries.filter((country) => {
-    const matches = regions.map((region) =>
-      country.regions.some((element) => element === region)
-    );
-
-    return matches.some((el) => el);
-  });
+  return filteredCountries.filter((country) =>
+    country.regions.some((region) => regions.includes(region))
+  );
 };
 
-export const getOnlyCountries = (onlyCountriesArray, filteredCountries) => {
-  if (onlyCountriesArray.length === 0) return filteredCountries;
+export const getOnlyCountries = (
+  onlyCountriesIso2: CountryIso2[],
+  filteredCountries: Country[]
+) => {
+  if (onlyCountriesIso2.length === 0) return filteredCountries;
 
   return filteredCountries.filter((country) =>
-    onlyCountriesArray.some((element) => element === country.iso2)
+    onlyCountriesIso2.some((element) => element === country.iso2)
   );
 };

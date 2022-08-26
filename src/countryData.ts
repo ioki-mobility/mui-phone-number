@@ -16,15 +16,15 @@
 // ['north-america', 'south-america', 'central-america', 'carribean',
 //  'european-union', 'ex-ussr', 'middle-east', 'north-africa']
 
-type CountryIso2 = string;
-type Region = string;
+export type CountryIso2 = string;
+export type Region = string;
 
-type Country = {
+export type Country = {
   name: string;
   regions: Region[];
   iso2: string;
   dialCode: string;
-  priority?: number;
+  priority: number;
   format?: string;
   hasAreaCodes: boolean;
   isAreaCode: boolean;
@@ -662,7 +662,7 @@ const allCountriesTemp = rawAllCountries.map((country) => {
     regions,
     iso2,
     dialCode,
-    priority,
+    priority: priority || 0,
     format: format || undefined,
     hasAreaCodes: !!areaCodes,
     isAreaCode: false,
