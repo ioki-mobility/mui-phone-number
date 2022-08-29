@@ -31,7 +31,7 @@ export type MuiPhoneNumberProps = TextFieldProps & {
   onlyCountries?: string[];
   preferredCountries?: string[];
   regions?: [string] | string;
-  masks?: { [countryIso2: string]: string };
+  masks?: { [countryIso2: CountryIso2]: string };
   isValid: (phoneNumber: string) => boolean;
   localization: { [englishName: string]: string };
   onEnterKeyPress: () => void;
@@ -114,9 +114,7 @@ const MuiPhoneNumber = ({
   const [onlyCountries, setOnlyCountries] = useState<Country[]>([]);
   const [preferredCountries, setPreferredCountries] = useState<Country[]>([]);
   const [loading, setLoading] = useState(true);
-  const [inputRef, setInputRef] = useState(null);
   const [placeholder, setPlaceholder] = useState(defaultPlaceholder);
-  const [defaultCountry, setDefaultCountry] = useState<Country | null>(null);
 
   const getInputMask = (country: Country) => {
     const mask = masks[country.iso2];
@@ -205,30 +203,10 @@ const MuiPhoneNumber = ({
     handleNewInput(e.currentTarget.value, false);
   };
 
-  const handlePaste = (e: ClipboardEvent) => {
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
     const newInput = e.clipboardData?.getData("text");
 
     if (newInput) handleNewInput(newInput, true);
-  };
-
-  const handleRefInput = (ref) => {
-    setInputRef(ref);
-
-    let refProp;
-
-    if (inputRef) {
-      refProp = inputRef;
-    } else if (InputProps && InputProps.ref) {
-      refProp = InputProps.ref;
-    }
-
-    if (refProp) {
-      if (typeof refProp === "function") {
-        refProp(ref);
-      } else {
-        setInputRef(ref);
-      }
-    }
   };
 
   useEffect(() => {
@@ -262,7 +240,6 @@ const MuiPhoneNumber = ({
       return;
     }
 
-    setDefaultCountry(defaultCountry);
     setSelectedCountry(defaultCountry);
 
     handleNewInput(value || "", true, defaultCountry);
@@ -331,6 +308,7 @@ const MuiPhoneNumber = ({
   };
 
   const checkIfValid = () =>
+    selectedCountry &&
     isValid(numberWithCountry(selectedCountry, formattedNumberWithoutCountry));
 
   const getDropdownProps = () => {
@@ -358,7 +336,7 @@ const MuiPhoneNumber = ({
     };
   };
 
-  if (loading) return null;
+  if (loading || !selectedCountry) return null;
 
   const dropdownProps = disableDropdown ? {} : getDropdownProps();
 
@@ -366,7 +344,6 @@ const MuiPhoneNumber = ({
     <>
       <input
         type="hidden"
-        ref={handleRefInput}
         value={numberWithCountry(
           selectedCountry,
           formattedNumberWithoutCountry
