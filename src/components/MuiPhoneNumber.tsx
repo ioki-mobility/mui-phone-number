@@ -205,6 +205,12 @@ const MuiPhoneNumber = ({
     handleNewInput(e.currentTarget.value, false);
   };
 
+  const handlePaste = (e: ClipboardEvent) => {
+    const newInput = e.clipboardData?.getData("text");
+
+    if (newInput) handleNewInput(newInput, true);
+  };
+
   const handleRefInput = (ref) => {
     setInputRef(ref);
 
@@ -372,6 +378,7 @@ const MuiPhoneNumber = ({
         className={inputClass}
         error={error || !checkIfValid()}
         onChange={handleInput}
+        onPaste={handlePaste}
         onClick={handleInputClick}
         onFocus={handleInputFocus}
         onBlur={handleInputBlur}
