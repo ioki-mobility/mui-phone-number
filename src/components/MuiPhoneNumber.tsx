@@ -129,30 +129,7 @@ const MuiPhoneNumber = ({
   const updateFormattedNumber = (phoneNumber: string) => {
     if (!phoneNumber) return;
 
-    const unformattedNumber = phoneNumber.replace(/\D/g, "");
-    const country =
-      guessSelectedCountry(
-        unformattedNumber.substring(0, 6),
-        onlyCountries,
-        defaultCountryIso2
-      ) || defaultCountry;
-
-    if (!country) return;
-
-    const strippedNumber = stripCountryDialCode(
-      country.dialCode,
-      unformattedNumber
-    );
-
-    const formattedNumber = formatNumber(
-      strippedNumber,
-      country ? getInputMask(country) : undefined,
-      enableLongNumbers,
-      autoFormat
-    );
-
-    setSelectedCountry(country);
-    setFormattedNumberWithoutCountry(formattedNumber);
+    handleNewInput(phoneNumber, true);
   };
 
   const getCountryData = () => {
@@ -165,27 +142,51 @@ const MuiPhoneNumber = ({
     };
   };
 
-  const handleInput = (e: NumberChangeEvent) => {
-    const oldFormattedText = formattedNumberWithoutCountry;
-    const inputValue = e.currentTarget.value;
+  const handleNewInput = (
+    newInput: string,
+    checkCountry: boolean = false,
+    defaultCountry: Country | null = selectedCountry
+  ) => {
+    if (!selectedCountry) return;
+
+    const oldFormattedNumber = formattedNumberWithoutCountry;
+    const inputValue = newInput;
 
     // if the input is the same as before, must be some special key like enter etc.
-    if (inputValue === oldFormattedText) {
+    if (inputValue === oldFormattedNumber) {
       return;
     }
 
-    let formattedNumber = "";
-    const trimmedNumber = inputValue.replace(/\D/g, "");
+    let formattedNumber = inputValue;
+    const unformattedNumber = inputValue.replace(/\D/g, "");
 
     // Does not exceed 15 digit phone number limit
-    if (trimmedNumber.length > 15) {
+    if (unformattedNumber.length > 15) {
       return;
     }
 
-    if (inputValue.length > 0 && selectedCountry) {
+    let country = defaultCountry;
+
+    if (checkCountry && unformattedNumber.length > 1) {
+      country =
+        guessSelectedCountry(
+          unformattedNumber.substring(0, 6),
+          onlyCountries,
+          defaultCountryIso2
+        ) || defaultCountry;
+    }
+
+    if (!country) return;
+
+    const strippedNumber = stripCountryDialCode(
+      country.dialCode,
+      unformattedNumber
+    );
+
+    if (unformattedNumber.length > 0 && country) {
       formattedNumber = formatNumber(
-        trimmedNumber,
-        getInputMask(selectedCountry),
+        strippedNumber,
+        country ? getInputMask(country) : undefined,
         enableLongNumbers,
         autoFormat
       );
@@ -193,12 +194,15 @@ const MuiPhoneNumber = ({
 
     setFormattedNumberWithoutCountry(formattedNumber);
 
+    if (country !== selectedCountry) setSelectedCountry(country);
+
     if (onChange) {
-      onChange(
-        numberWithCountry(selectedCountry, formattedNumber),
-        getCountryData()
-      );
+      onChange(numberWithCountry(country, formattedNumber), getCountryData());
     }
+  };
+
+  const handleInput = (e: NumberChangeEvent) => {
+    handleNewInput(e.currentTarget.value, false);
   };
 
   const handleRefInput = (ref) => {
@@ -253,45 +257,9 @@ const MuiPhoneNumber = ({
     }
 
     setDefaultCountry(defaultCountry);
+    setSelectedCountry(defaultCountry);
 
-    let inputNumber = value || "";
-    const unformattedNumber = inputNumber.replace(/\D/g, "");
-
-    let countryGuess = null;
-    if (inputNumber.length > 1) {
-      // Country detect by value field
-      countryGuess = guessSelectedCountry(
-        unformattedNumber.substring(0, 6),
-        onlyCountries,
-        defaultCountryIso2
-      );
-    } else if (defaultCountry) {
-      // Default country
-      countryGuess = find(onlyCountries, { iso2: defaultCountryIso2 });
-    } else {
-      // Empty params
-      countryGuess = null;
-    }
-
-    const selectedCountry = countryGuess ?? defaultCountry;
-
-    if (selectedCountry) {
-      inputNumber = stripCountryDialCode(selectedCountry.dialCode, inputNumber);
-
-      if (inputNumber.length > 0) {
-        inputNumber = formatNumber(
-          inputNumber,
-          getInputMask(selectedCountry) ||
-            (selectedCountry.name ? selectedCountry.format : undefined),
-          enableLongNumbers,
-          autoFormat
-        );
-      }
-
-      setSelectedCountry(selectedCountry);
-    }
-
-    setFormattedNumberWithoutCountry(inputNumber);
+    handleNewInput(value || "", true, defaultCountry);
     setLoading(false);
   }, []);
 
