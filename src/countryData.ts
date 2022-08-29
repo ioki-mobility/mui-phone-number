@@ -646,11 +646,13 @@ const rawAllCountries: RawCountry[] = [
 const allCountryCodesTemp: { [dialCode: string]: CountryIso2[] } = {};
 
 const addCountryCode = (iso2: string, dialCode: string, priority?: number) => {
-  if (!(dialCode in allCountryCodesTemp)) {
+  if (!allCountryCodesTemp[dialCode]) {
     allCountryCodesTemp[dialCode] = [];
   }
 
   const index = priority || 0;
+
+  //@ts-ignore
   allCountryCodesTemp[dialCode][index] = iso2;
 };
 

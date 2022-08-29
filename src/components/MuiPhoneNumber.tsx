@@ -43,15 +43,15 @@ export type MuiPhoneNumberProps = Omit<
   onClick?: (
     e: React.MouseEvent<HTMLInputElement>,
     countryData: CountryCallbackData
-  ) => {};
+  ) => void;
   onFocus?: (
     e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
     countryData: CountryCallbackData
-  ) => {};
+  ) => void;
   onBlur?: (
     e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
     countryData: CountryCallbackData
-  ) => {};
+  ) => void;
 };
 
 const TextFieldStyled = styled(TextField)(() => ({
