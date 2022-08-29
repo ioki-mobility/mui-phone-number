@@ -1,10 +1,8 @@
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import {
   TextField,
   useMediaQuery,
-  ListSubheader,
   Popper,
-  Typography,
   Autocomplete,
   Stack,
   IconButton,
@@ -12,7 +10,7 @@ import {
 import { useTheme, styled } from "@mui/material/styles";
 import { VariableSizeList, ListChildComponentProps } from "react-window";
 import Flags from "country-flag-icons/react/3x2";
-import { Country, CountryIso2 } from "../countryData";
+import { Country } from "../countryData";
 
 const LISTBOX_PADDING = 8; // px
 
@@ -106,13 +104,10 @@ const ListboxComponent = React.forwardRef<
   React.HTMLAttributes<HTMLElement>
 >((props, ref) => {
   const { children, ...other } = props;
-  const itemData: React.ReactNode[] = [];
-  (children as React.ReactNode[]).forEach(
-    (item: React.ReactNode & { children?: React.ReactNode[] }) => {
-      itemData.push(item);
-      itemData.push(...(item.children || []));
-    }
-  );
+  const itemData: ReactNode[] = [];
+  (children as ReactNode[]).forEach((item: ReactNode) => {
+    itemData.push(item);
+  });
 
   const theme = useTheme();
   const smUp = useMediaQuery(theme.breakpoints.up("sm"), {
@@ -189,6 +184,7 @@ const VirtualCountryMenu = ({
     setOpen(false);
     onCountrySelected(country);
   };
+  //@ts-ignore
   const Flag = Flags[selectedCountry.iso2.toUpperCase()];
 
   return (

@@ -2,10 +2,10 @@ import { reduce, head, tail } from "lodash";
 import { Country } from "../countryData";
 
 export const formatNumber = (
-  text,
-  patternArg,
-  enableLongNumbers,
-  autoFormat
+  text: string,
+  patternArg?: string,
+  enableLongNumbers?: boolean,
+  autoFormat?: boolean
 ) => {
   let pattern;
   if (patternArg) {

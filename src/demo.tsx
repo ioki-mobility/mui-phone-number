@@ -1,11 +1,17 @@
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import ReactDOM from "react-dom/client";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import MuiPhoneNumber from "./components/MuiPhoneNumber";
 import "./demo.css";
 
-const Demo = ({ description, code, children }) => {
+type DemoProps = {
+  description: ReactNode;
+  code: string;
+  children: ReactNode;
+};
+
+const Demo = ({ description, code, children }: DemoProps) => {
   return (
     <div>
       <p>{description}</p>

@@ -19,7 +19,7 @@ type CountryCallbackData =
   | {}
   | { name: string; dialCode: string; countryCode: string };
 
-export type MuiPhoneNumberProps = TextFieldProps & {
+export type MuiPhoneNumberProps = Partial<Omit<TextFieldProps, "onChange">> & {
   autoFormat?: boolean;
   classes?: any;
   defaultCountry?: string;
@@ -27,25 +27,25 @@ export type MuiPhoneNumberProps = TextFieldProps & {
   enableLongNumbers?: boolean;
   excludeCountries?: string[];
   inputClass?: string;
-  onChange: (phoneNumber: string, countryData: CountryCallbackData) => void;
+  onChange?: (phoneNumber: string, countryData: CountryCallbackData) => void;
   onlyCountries?: string[];
   preferredCountries?: string[];
-  regions?: [string] | string;
+  regions?: string[] | string;
   masks?: { [countryIso2: CountryIso2]: string };
-  isValid: (phoneNumber: string) => boolean;
-  localization: { [englishName: string]: string };
-  onEnterKeyPress: () => void;
-  keys: object;
-  value: string;
-  onClick: (
+  isValid?: (phoneNumber: string) => boolean;
+  localization?: { [englishName: string]: string };
+  keys?: object;
+  value?: string;
+  placeholder?: string;
+  onClick?: (
     e: React.MouseEvent<HTMLInputElement>,
     countryData: CountryCallbackData
   ) => {};
-  onFocus: (
+  onFocus?: (
     e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
     countryData: CountryCallbackData
   ) => {};
-  onBlur: (
+  onBlur?: (
     e: React.FocusEvent<HTMLInputElement>,
     countryData: CountryCallbackData
   ) => {};
@@ -69,7 +69,6 @@ const MuiPhoneNumber = ({
   placeholder: defaultPlaceholder = "(702) 123-4567",
   disabled = false,
   error = false,
-  variant = "standard",
 
   inputClass = "",
 
@@ -87,7 +86,6 @@ const MuiPhoneNumber = ({
 
   localization = {},
 
-  onEnterKeyPress = () => {},
   onChange = () => {},
 
   keys = {
@@ -247,7 +245,9 @@ const MuiPhoneNumber = ({
   }, []);
 
   useEffect(() => {
-    updateFormattedNumber(value);
+    if (value) {
+      updateFormattedNumber(value);
+    }
   }, [updateFormattedNumber, value, selectedCountry]);
 
   const handleInputClick = (e: React.MouseEvent<HTMLInputElement>) => {
@@ -360,6 +360,7 @@ const MuiPhoneNumber = ({
         onFocus={handleInputFocus}
         onBlur={handleInputBlur}
         type="tel"
+        variant="outlined"
         InputProps={{
           ...dropdownProps,
           ...InputProps,
