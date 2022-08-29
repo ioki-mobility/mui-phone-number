@@ -8,6 +8,7 @@
   ],
   "main": "./dist/mui-phone-number.umd.cjs",
   "module": "./dist/mui-phone-number.js",
+  "types": "./src/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/mui-phone-number.js",

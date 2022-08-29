@@ -31,8 +31,9 @@
 //  keys: PropTypes.object,
 //}
 import * as React from "react";
-import MuiPhoneNumberProps from "./components/MuiPhoneNumber";
+import { MuiPhoneNumberProps } from "./components/MuiPhoneNumber";
 
 declare const MuiPhoneNumber: React.FC<MuiPhoneNumberProps>;
 
 export default MuiPhoneNumber;
+export { MuiPhoneNumberProps };
