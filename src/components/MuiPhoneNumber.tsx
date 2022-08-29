@@ -19,8 +19,9 @@ type CountryCallbackData =
   | {}
   | { name: string; dialCode: string; countryCode: string };
 
-export type MuiPhoneNumberProps = Partial<
-  Omit<TextFieldProps, "onChange" | "onClick" | "onFocus" | "onBlur">
+export type MuiPhoneNumberProps = Omit<
+  Partial<TextFieldProps>,
+  "onChange" | "onClick" | "onFocus" | "onBlur"
 > & {
   autoFormat?: boolean;
   classes?: any;
