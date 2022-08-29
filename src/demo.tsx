@@ -147,6 +147,13 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
           placeholder="(702) 123-4567"
         />
       </Demo>
+
+      <Demo
+        description="Standard Material UI look"
+        code={`<MuiPhoneNumber variant="standard" />`}
+      >
+        <MuiPhoneNumber variant="standard" />
+      </Demo>
     </div>
   </React.StrictMode>
 );
