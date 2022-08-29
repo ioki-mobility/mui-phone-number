@@ -1,4 +1,5 @@
 import { reduce, head, tail } from "lodash";
+import { Country } from "../countryData";
 
 export const formatNumber = (
   text,
@@ -64,9 +65,16 @@ export const formatNumber = (
   return formattedNumber;
 };
 
-export const numberWithCountry = (country, numberWithoutCountry) => {
+export const numberWithCountry = (
+  country: Country,
+  numberWithoutCountry: string
+) => {
+  const unformattedNumber = numberWithoutCountry
+    .replace(/\D/g, "")
+    .replace(/^0+/, "");
+
   if (country) {
-    return `+${country.dialCode}${numberWithoutCountry}`;
+    return `+${country.dialCode}${unformattedNumber}`;
   }
 
   return numberWithoutCountry;
