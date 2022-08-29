@@ -195,6 +195,8 @@ const VirtualCountryMenu = ({
     <Autocomplete
       id="virtualize-countries"
       disableListWrap
+      disableClearable
+      disablePortal
       PopperComponent={StyledPopper}
       ListboxComponent={ListboxComponent}
       options={countries}
@@ -204,7 +206,6 @@ const VirtualCountryMenu = ({
       isOptionEqualToValue={(option, value) =>
         option.dialCode === value.dialCode
       }
-      disablePortal={true}
       renderInput={(params) => (
         <Stack
           sx={{
