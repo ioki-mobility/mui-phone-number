@@ -19,7 +19,9 @@ type CountryCallbackData =
   | {}
   | { name: string; dialCode: string; countryCode: string };
 
-export type MuiPhoneNumberProps = Partial<Omit<TextFieldProps, "onChange">> & {
+export type MuiPhoneNumberProps = Partial<
+  Omit<TextFieldProps, "onChange" | "onClick" | "onFocus" | "onBlur">
+> & {
   autoFormat?: boolean;
   classes?: any;
   defaultCountry?: string;
@@ -46,7 +48,7 @@ export type MuiPhoneNumberProps = Partial<Omit<TextFieldProps, "onChange">> & {
     countryData: CountryCallbackData
   ) => {};
   onBlur?: (
-    e: React.FocusEvent<HTMLInputElement>,
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
     countryData: CountryCallbackData
   ) => {};
 };
