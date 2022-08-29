@@ -52,23 +52,34 @@ const IconButtonStyled = styled(IconButton)(() => ({
 const renderRow = (props: ListChildComponentProps) => {
   const { data, index, style } = props;
   const dataSet = data[index];
+  const [countryProps, country, helpers] = dataSet;
+  const { localization, countryClicked } = helpers;
   const inlineStyle = {
     ...style,
     top: (style.top as number) + LISTBOX_PADDING,
   };
-
-  if (dataSet.hasOwnProperty("group")) {
-    return (
-      <ListSubheader key={dataSet.key} component="div" style={inlineStyle}>
-        {dataSet.group}
-      </ListSubheader>
-    );
-  }
+  //@ts-ignore
+  const Flag = Flags[country.iso2.toUpperCase()];
 
   return (
-    <Typography component="li" {...dataSet[0]} noWrap style={inlineStyle}>
-      {dataSet}
-    </Typography>
+    <Stack
+      key={country.dialCode}
+      {...countryProps}
+      direction="row"
+      alignItems="center"
+      gap={1}
+      sx={{ padding: "0.25rem 0.75rem", cursor: "pointer" }}
+      onClick={() => countryClicked(country)}
+      component="li"
+      style={inlineStyle}
+    >
+      {Boolean(Flag) && <Flag style={{ height: "1em" }} />}
+      {!Boolean(Flag) && <div style={{ width: "1.5rem" }}></div>}
+      <span>
+        {(localization && localization[country.name]) || country.name} +
+        {country.dialCode}
+      </span>
+    </Stack>
   );
 };
 
@@ -161,7 +172,6 @@ const StyledPopper = styled(Popper)({
 });
 
 type Props = {
-  FlagComponent: JSX.Element;
   selectedCountry: Country;
   countries: Country[];
   localization: { [englishName: string]: string };
@@ -169,17 +179,17 @@ type Props = {
 };
 
 const VirtualCountryMenu = ({
-  FlagComponent,
   selectedCountry,
   countries,
   localization,
   onCountrySelected,
 }: Props) => {
   const [open, setOpen] = useState(false);
-  const countryClicked = (country: Country) => () => {
+  const countryClicked = (country: Country) => {
     setOpen(false);
     onCountrySelected(country);
   };
+  const Flag = Flags[selectedCountry.iso2.toUpperCase()];
 
   return (
     <Autocomplete
@@ -214,7 +224,7 @@ const VirtualCountryMenu = ({
           }}
         >
           <IconButtonStyled onClick={() => setOpen(!open)}>
-            {Boolean(FlagComponent) && <FlagComponent className="margin" />}
+            {Boolean(Flag) && <Flag />}
             <IconButtonDialCodeStyled>
               +{selectedCountry.dialCode}
             </IconButtonDialCodeStyled>
@@ -223,28 +233,9 @@ const VirtualCountryMenu = ({
           <TextField {...params} sx={{ opacity: 0, zIndex: -1 }} />
         </Stack>
       )}
-      renderOption={(_props, country) => {
-        //@ts-ignore
-        const Flag = Flags[country.iso2.toUpperCase()];
-
-        return (
-          <Stack
-            key={country.dialCode}
-            direction="row"
-            alignItems="center"
-            gap={1}
-            sx={{ padding: "0.25rem 0.75rem", cursor: "pointer" }}
-            onClick={countryClicked(country)}
-          >
-            {Boolean(Flag) && <Flag style={{ height: "1em" }} />}
-            {!Boolean(Flag) && <div style={{ width: "1.5rem" }}></div>}
-            <span>
-              {(localization && localization[country.name]) || country.name} +
-              {country.dialCode}
-            </span>
-          </Stack>
-        );
-      }}
+      renderOption={(props, option) =>
+        [props, option, { localization, countryClicked }] as React.ReactNode
+      }
       getOptionLabel={(country) =>
         (localization && localization[country.name]) || country.name
       }

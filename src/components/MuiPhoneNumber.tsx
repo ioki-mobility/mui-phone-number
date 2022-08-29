@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Flags from "country-flag-icons/react/3x2";
 import { styled, TextField, InputAdornment } from "@mui/material";
 import { find, filter, isString } from "lodash";
 import { allCountries, Country, CountryIso2 } from "../countryData";
@@ -369,14 +368,10 @@ const MuiPhoneNumber = ({
       return localizedA.localeCompare(localizedB);
     });
 
-    //@ts-ignore
-    const FlagComponent = Flags[selectedCountry.iso2.toUpperCase()];
-
     return {
       startAdornment: (
         <InputAdornment sx={{ position: "relative" }} position="start">
           <VirtualCountryMenu
-            FlagComponent={FlagComponent}
             selectedCountry={selectedCountry}
             countries={preferredCountries.concat(onlyCountries)}
             localization={localization}
