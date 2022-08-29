@@ -119,6 +119,13 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       </Demo>
 
       <Demo
+        description="With a label"
+        code={`<MuiPhoneNumber label="Mobile number" />`}
+      >
+        <MuiPhoneNumber label="Mobile number" />
+      </Demo>
+
+      <Demo
         description="Disabled dropdown"
         code={`<MuiPhoneNumber
   onlyCountries={["us"]}
