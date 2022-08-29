@@ -73,6 +73,10 @@ export const numberWithCountry = (
     .replace(/\D/g, "")
     .replace(/^0+/, "");
 
+  if (unformattedNumber.trim().length === 0) {
+    return "";
+  }
+
   if (country) {
     return `+${country.dialCode}${unformattedNumber}`;
   }
