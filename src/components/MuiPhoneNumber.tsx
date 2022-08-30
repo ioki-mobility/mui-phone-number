@@ -379,6 +379,7 @@ const MuiPhoneNumber = ({
           ...dropdownProps,
           ...InputProps,
         }}
+        name={`${name}-without-country`}
         {...restProps}
       />
     </>
