@@ -43,8 +43,8 @@
     "vite": "^3.0.9"
   },
   "peerDependencies": {
-    "@emotion/styled": "^11.10.0",
-    "@mui/material": "^5.10.2",
-    "react": "^18.2.0"
+    "@emotion/styled": "11.x",
+    "@mui/material": "5.x",
+    "react": "18.x"
   }
 }
