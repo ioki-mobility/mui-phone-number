@@ -52,6 +52,7 @@ export type MuiPhoneNumberProps = Omit<
     e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
     countryData: CountryCallbackData
   ) => void;
+  name?: string;
   innerRef?: React.ForwardedRef<HTMLInputElement>;
 };
 
@@ -108,6 +109,7 @@ const MuiPhoneNumber = ({
   onFocus,
   onClick,
   onBlur,
+  name,
   innerRef,
   ...restProps
 }: MuiPhoneNumberProps) => {
@@ -353,6 +355,7 @@ const MuiPhoneNumber = ({
           selectedCountry,
           formattedNumberWithoutCountry
         )}
+        name={name}
         ref={innerRef}
       />
       <TextFieldStyled
