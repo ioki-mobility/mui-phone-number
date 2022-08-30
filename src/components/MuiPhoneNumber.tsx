@@ -120,6 +120,9 @@ const MuiPhoneNumber = ({
   const [preferredCountries, setPreferredCountries] = useState<Country[]>([]);
   const [loading, setLoading] = useState(true);
   const [placeholder, setPlaceholder] = useState(defaultPlaceholder);
+  const [phoneNumber, setPhoneNumber] = useState<string | null | undefined>(
+    null
+  );
 
   const getInputMask = (country: Country) => {
     const mask = masks[country.iso2];
@@ -129,10 +132,10 @@ const MuiPhoneNumber = ({
     return country.format;
   };
 
-  const updateFormattedNumber = (phoneNumber: string) => {
-    if (!phoneNumber) return;
+  const updateFormattedNumber = (inputValue?: string | null) => {
+    if (!inputValue || phoneNumber === inputValue) return;
 
-    handleNewInput(phoneNumber, true);
+    handleNewInput(inputValue, true);
   };
 
   const getCountryData = () => {
@@ -196,6 +199,7 @@ const MuiPhoneNumber = ({
     }
 
     setFormattedNumberWithoutCountry(formattedNumber);
+    setPhoneNumber(value);
 
     if (country !== selectedCountry) setSelectedCountry(country);
 
@@ -285,6 +289,7 @@ const MuiPhoneNumber = ({
 
     setSelectedCountry(nextSelectedCountry);
     setFormattedNumberWithoutCountry(newFormattedNumber);
+    setPhoneNumber(value);
 
     if (onChange) {
       onChange(
