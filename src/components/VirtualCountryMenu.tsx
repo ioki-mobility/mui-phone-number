@@ -1,4 +1,5 @@
-import React, { ReactNode, useState } from "react";
+import React, { JSXElementConstructor, ReactNode, useState } from "react";
+import { PopperProps } from "@mui/material/Popper";
 import {
   TextField,
   useMediaQuery,
@@ -193,7 +194,9 @@ const VirtualCountryMenu = ({
       disableListWrap
       disableClearable
       disablePortal
-      PopperComponent={StyledPopper}
+      PopperComponent={
+        StyledPopper as unknown as JSXElementConstructor<PopperProps>
+      }
       ListboxComponent={ListboxComponent}
       options={countries}
       open={open}
