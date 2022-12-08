@@ -207,6 +207,11 @@ To start and open the demo page:
 yarn dev
 ```
 
+## Authors
+
+- [@phylor](https://github.com/phylor)
+
+
 ## License
 
 [MIT](https://opensource.org/licenses/MIT)
