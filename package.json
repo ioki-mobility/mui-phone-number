@@ -28,7 +28,7 @@
     "react-window": "^1.8.8"
   },
   "devDependencies": {
-    "@emotion/react": "^11.10.4",
+    "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.4",
     "@mui/material": "^5.11.7",
     "@types/react": "^18.0.27",
