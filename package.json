@@ -21,7 +21,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@types/lodash": "^4.14.184",
+    "@types/lodash": "^4.14.191",
     "@types/react-window": "^1.8.5",
     "country-flag-icons": "^1.5.5",
     "lodash": "^4.17.21",
