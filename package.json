@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "type": "module",
   "files": [
-    "dist"
+    "dist",
+    "src/index.d.ts"
   ],
   "main": "./dist/mui-phone-number.umd.cjs",
   "module": "./dist/mui-phone-number.js",
