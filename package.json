@@ -19,6 +19,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "prettier": "prettier --write .",
     "preview": "vite preview"
   },
   "dependencies": {
