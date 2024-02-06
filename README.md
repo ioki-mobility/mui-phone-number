@@ -19,18 +19,18 @@ yarn add mui-phone-number
 ## Usage
 
 ```jsx
-import MuiPhoneNumber from 'mui-phone-number'
+import MuiPhoneNumber from "mui-phone-number";
 
-<MuiPhoneNumber defaultCountry="us" onChange={onPhoneNumberChanged} />
+<MuiPhoneNumber defaultCountry="us" onChange={onPhoneNumberChanged} />;
 ```
 
 The handler for the `onChange` event receives the entered phone number as a string (including the country dial code).
 
 ```js
 const onPhoneNumberChanged = (phoneNumber, country) => {
-  console.log(phoneNumber) // +4176 123 45 67
-  console.log(country) // { name: "Switzerland", dialCode: "41", countryCode: "ch" }
-}
+  console.log(phoneNumber); // +4176 123 45 67
+  console.log(country); // { name: "Switzerland", dialCode: "41", countryCode: "ch" }
+};
 ```
 
 ## Options
@@ -150,7 +150,7 @@ Single region (without array notation): `'europe'`
 Multiple regions: `['north-america', 'carribean']`
 
 ```jsx
-<MuiPhoneNumber defaultCountry="ca" regions={['north-america', 'carribean']} />
+<MuiPhoneNumber defaultCountry="ca" regions={["north-america", "carribean"]} />
 ```
 
 ### Localization
@@ -167,7 +167,10 @@ Multiple regions: `['north-america', 'carribean']`
 </table>
 
 ```jsx
-<MuiPhoneNumber onlyCountries={['de', 'es']} localization={{ Germany: 'Deutschland', Spain: 'España' }} />
+<MuiPhoneNumber
+  onlyCountries={["de", "es"]}
+  localization={{ Germany: "Deutschland", Spain: "España" }}
+/>
 ```
 
 ### Supported events
@@ -210,7 +213,6 @@ yarn dev
 ## Authors
 
 - [@phylor](https://github.com/phylor)
-
 
 ## License
 
