@@ -25,7 +25,7 @@
   "dependencies": {
     "@types/lodash": "^4.14.202",
     "@types/react-window": "^1.8.8",
-    "country-flag-icons": "^1.5.9",
+    "country-flag-icons": "^1.5.10",
     "lodash": "^4.17.21",
     "react-window": "^1.8.10"
   },
