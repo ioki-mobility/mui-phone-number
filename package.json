@@ -27,7 +27,7 @@
     "@types/react-window": "^1.8.8",
     "country-flag-icons": "^1.5.12",
     "lodash": "^4.17.21",
-    "react-window": "^1.8.10"
+    "react-window": "^1.8.11"
   },
   "devDependencies": {
     "@emotion/react": "^11.11.4",
